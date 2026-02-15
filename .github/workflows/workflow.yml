@@ -14,14 +14,6 @@ jobs:
           java-version: '21'
           distribution: 'jetbrains'
 
-      - name: List files for debugging
-        run: |
-            ls -R gradle/wrapper
-            pwd
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
       - name: Run Build
         run: ./gradlew build
       - name: Setup Gradle
