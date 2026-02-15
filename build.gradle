@@ -37,7 +37,7 @@ sourceSets {
 test {
     useJUnitPlatform()
     testLogging {
-        events "skipped", "failed"
+        events "passed", "skipped", "failed"
     }
 }
 
