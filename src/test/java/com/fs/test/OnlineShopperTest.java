@@ -71,7 +71,7 @@ public class OnlineShopperTest extends BaseTest {
         String selectedCategory = listOfProductCategories().getFirst(); // electronics is first in list
         Integer cheapestElectronicID = cheapestProductInCategoryId(selectedCategory);
 
-        Cart item = new Cart(null, 1, Date.valueOf(LocalDate.now()), List.of(
+        Cart item = new Cart(1, Date.valueOf(LocalDate.now()), List.of(
                 new Products(cheapestElectronicID, 1)
         ));
 
