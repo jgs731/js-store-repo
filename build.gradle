@@ -24,33 +24,12 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:6.0.2'
 }
 
-sourceSets {
-    main {
-        java { srcDirs = ['src/main/java'] }
-    }
-    test {
-        java { srcDirs = ['src/test/java'] }
-        resources { srcDir 'src/test/resources'}
-    }
-}
-
-
 test {
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"
     }
 }
-
-//tasks.named('sanity') {
-//    // Use JUnit Platform for unit tests.
-//    useJUnitPlatform()
-//}
-//
-//tasks.named('regression') {
-//    // Use JUnit Platform for unit tests.
-//    useJUnitPlatform()
-//}
 
 // We pull the files into a variable BEFORE the task's "doLast" block
 def testFiles = project.sourceSets.test.java.sourceDirectories

@@ -4,6 +4,7 @@ import com.fs.datamodels.Product;
 import com.fs.datamodels.Rating;
 import com.fs.utils.Endpoints;
 import io.restassured.http.Method;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class StoreManagerTest extends BaseTest{
 
     @ParameterizedTest
+    @DisplayName("New products can be added to the store")
     @MethodSource("listOfNewProducts")
     void addNewProductstoCatalogue(List<Product> products) {
         for(Product product : products) {
@@ -41,6 +43,7 @@ public class StoreManagerTest extends BaseTest{
     }
 
     @Test
+    @DisplayName("Products that already exist in the catalogue cannot be added")
     void duplicatesCannotBeAddedToCatalogue() {
         Product dupedProduct = new Product("Mens Cotton Jacket",55.99 ,
                 "great outerwear jackets for Spring/Autumn/Winter, suitable for many occasions, such as working, hiking, camping, mountain/rock climbing, cycling, traveling or other outdoors. Good gift choice for you or your family member. A warm hearted love to Father, " +
@@ -52,6 +55,7 @@ public class StoreManagerTest extends BaseTest{
     }
 
     @ParameterizedTest
+    @DisplayName("Existing products can be identified by ID from the catalogue")
     @ValueSource(ints = {1, 5, 12})
     void productsAreAvailableInTheProductList(int productID) {
         response = executeCall(Method.GET, Endpoints.PRODUCTS + productID);

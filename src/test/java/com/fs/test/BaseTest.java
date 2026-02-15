@@ -32,7 +32,7 @@ class BaseTest {
                 .build();
 
         responseSpecification = new ResponseSpecBuilder()
-                .log(LogDetail.ALL)
+                .log(LogDetail.BODY)
                 .build();
     }
 

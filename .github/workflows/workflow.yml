@@ -18,11 +18,9 @@ jobs:
         run: ./gradlew build
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
-      - run: ./gradlew build
-        working-directory: ./
-
-      - name: Run Gradle tests
-        run: ./gradlew test
+      - name: Run Tests
+        uses: gradle/actions/setup-gradle@v5
+      - run: ./gradlew test
         working-directory: ./
 
 
