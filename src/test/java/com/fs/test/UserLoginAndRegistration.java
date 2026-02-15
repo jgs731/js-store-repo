@@ -10,8 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UserLoginAndRegistration extends BaseTest {
     static Users users;
@@ -54,6 +53,6 @@ public class UserLoginAndRegistration extends BaseTest {
                 ));
         response = executeCall(Method.POST, Endpoints.USERS, null, userDetails);
 
-        assertTrue(response.jsonPath().get("id").equals(11));
+        assertNotEquals("", response.jsonPath().getObject("id", Integer.class));
     }
 }

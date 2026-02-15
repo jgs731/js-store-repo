@@ -1,5 +1,6 @@
 package com.fs.test;
 
+import com.fs.config.ConfigLoader;
 import com.fs.utils.Endpoints;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.restassured.builder.RequestSpecBuilder;
@@ -27,7 +28,7 @@ class BaseTest {
     @BeforeAll
     static void setup() {
         requestSpecification = new RequestSpecBuilder()
-                .setBaseUri(dotEnv.get("baseURL", "https://fakestoreapi.com"))
+                .setBaseUri(ConfigLoader.getBaseUrl())
                 .setContentType(ContentType.JSON)
                 .build();
 
