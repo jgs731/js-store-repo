@@ -3,6 +3,7 @@ package com.fs.test;
 import com.fs.config.ConfigLoader;
 import com.fs.utils.Endpoints;
 import io.github.cdimascio.dotenv.Dotenv;
+import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -35,6 +36,9 @@ class BaseTest {
         responseSpecification = new ResponseSpecBuilder()
                 .log(LogDetail.BODY)
                 .build();
+
+        System.out.println("LOGGING BASE URI: " + RestAssured.baseURI);
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
 
