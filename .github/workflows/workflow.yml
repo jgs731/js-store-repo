@@ -14,14 +14,17 @@ jobs:
           java-version: '21'
           distribution: 'jetbrains'
 
-      - name: Run Build
+      - name: Run Build/Test Suite
         run: ./gradlew build
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5
-      - name: Run Tests
-        uses: gradle/actions/setup-gradle@v5
-      - run: ./gradlew test
-        working-directory: ./
+
+      - name: 'Get HTML test results'
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: test-suite-results
+          path: build/reports/tests/test/
+          retention-days: 2
+
 
 
 

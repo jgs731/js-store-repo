@@ -9,6 +9,7 @@ import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
+import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
@@ -30,15 +31,16 @@ class BaseTest {
     static void setup() {
         requestSpecification = new RequestSpecBuilder()
                 .setBaseUri(ConfigLoader.getBaseUrl())
+                .addHeader("User-Agent", "Mozilla/5.0")
                 .setContentType(ContentType.JSON)
+                .setAccept(ContentType.JSON)
                 .build();
 
         responseSpecification = new ResponseSpecBuilder()
                 .log(LogDetail.BODY)
                 .build();
 
-        System.out.println("LOGGING BASE URI: " + RestAssured.baseURI);
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+        RestAssured.defaultParser = Parser.JSON;
     }
 
 
