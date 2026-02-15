@@ -54,7 +54,7 @@ public class StoreManagerTest extends BaseTest{
     @ParameterizedTest
     @ValueSource(ints = {1, 5, 12})
     void productsAreAvailableInTheProductList(int productID) {
-        response = executeCall(Method.GET, Endpoints.PRODUCTS + productID, null, null);
+        response = executeCall(Method.GET, Endpoints.PRODUCTS + productID);
 
         assertEquals(productID, response.jsonPath().getInt("id"));
     }

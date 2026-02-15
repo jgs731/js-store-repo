@@ -15,15 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UserLoginAndRegistration extends BaseTest {
     static Users users;
-    @BeforeAll
-    static void setupUser() {
-        response = executeCall(Method.GET, Endpoints.USERS, null, null);
-        users = response.jsonPath().getObject("[0]", Users.class);
-    }
 
     @Test
     @DisplayName("Users are able to log into the store successfully")
     void validUsersCanLogIn(){
+        response = executeCall(Method.GET, Endpoints.USERS);
+        users = response.jsonPath().getObject("[0]", Users.class);
+
         Auth userLogin = new Auth(users.username(), users.password());
         response = executeCall(Method.POST, Endpoints.AUTH, null, userLogin);
         String storedToken = response.jsonPath().getString("token");
@@ -47,7 +45,8 @@ public class UserLoginAndRegistration extends BaseTest {
     @Test
     @DisplayName("A new user can successfully register to the store")
     void newUserCanSuccessfullyRegisterToTheStore(){
-        Users userDetails = new Users( "test@example.net", "jaytest", "jaypwd",
+        double random = Math.ceil(Math.random() * 100);
+        Users userDetails = new Users( "test" + random  + "@example.net", "jaytest" + random, "jaypwd",
                 new Name("joshua", "smith"),
                 new Address("Manchester", "Mancunian Way", "1", "M1 9DJ",
                         new Geolocation("53.470811512522246", "-2.2417950582410384"),
