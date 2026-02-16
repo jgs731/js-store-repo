@@ -1,6 +1,6 @@
 name: FakeStoreAPI Tests on Gradle
 on:
-  pull_request
+  [push, pull_request]
 jobs:
   gradle:
     runs-on: ubuntu-latest

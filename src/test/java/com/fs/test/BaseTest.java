@@ -31,7 +31,6 @@ class BaseTest {
     static void setup() {
         requestSpecification = new RequestSpecBuilder()
                 .setBaseUri(ConfigLoader.getBaseUrl())
-                .addHeader("User-Agent", "Mozilla/5.0")
                 .setContentType(ContentType.JSON)
                 .setAccept(ContentType.JSON)
                 .build();
