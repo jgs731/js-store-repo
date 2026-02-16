@@ -17,6 +17,11 @@ dependencies {
     implementation 'io.rest-assured:rest-assured:6.0.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.20.2'
     implementation 'io.github.cdimascio:dotenv-java:3.2.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.15.2'
+    implementation 'org.apache.groovy:groovy:4.0.18'
+    implementation 'org.apache.groovy:groovy-json:4.0.18'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.11.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:6.0.2'
@@ -24,6 +29,7 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:6.0.2'
     testImplementation 'org.apache.groovy:groovy:4.0.18'
     testImplementation 'org.apache.groovy:groovy-json:4.0.18'
+
 }
 
 test {
