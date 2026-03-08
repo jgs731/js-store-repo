@@ -21,7 +21,8 @@ public class UserLoginAndRegistration extends BaseTest {
 
     @BeforeEach
     void init() {
-        userService = new UserService(requestSpecification);
+        ApiClient client = new ApiClient(requestSpecification);
+        userService = new UserService(client);
     }
 
 
@@ -54,13 +55,13 @@ public class UserLoginAndRegistration extends BaseTest {
     @DisplayName("A new user can successfully register to the store")
     void newUserCanSuccessfullyRegisterToTheStore(){
         double random = Math.ceil(Math.random() * 100);
-        Users userDetails = new Users( "test" + random  + "@example.net", "jaytest" + random, "jaypwd",
-                new Name("joshua", "smith"),
+        Users userDetails = new Users( "test" + random  + "@example.net", "storeusertest" + random, "StoreU53rPwd#",
+                new Name("Jack", "Bower"),
                 new Address("Manchester", "Mancunian Way", "1", "M1 9DJ",
                         new Geolocation("53.470811512522246", "-2.2417950582410384"),
                         "0123465798"
                 ));
-        response = userService.authenticateUser(userDetails);
+        response = userService.addUser(userDetails);
 
         assertNotEquals("", response.jsonPath().getObject("id", Integer.class));
     }

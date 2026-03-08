@@ -22,8 +22,9 @@ public class OnlineShopperTest extends BaseTest {
 
     @BeforeEach
     void init() {
-        productService = new ProductService(requestSpecification);
-        cartService = new CartService(requestSpecification);
+        ApiClient client = new ApiClient(requestSpecification);
+        productService = new ProductService(client);
+        cartService = new CartService(client);
     }
 
     public int productId;

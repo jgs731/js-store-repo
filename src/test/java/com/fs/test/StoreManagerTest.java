@@ -4,8 +4,6 @@ import com.fs.datamodels.Product;
 import com.fs.datamodels.Rating;
 import com.fs.services.CartService;
 import com.fs.services.ProductService;
-import com.fs.utils.Endpoints;
-import io.restassured.http.Method;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,8 +23,9 @@ public class StoreManagerTest extends BaseTest{
 
     @BeforeEach
     void init() {
-        productService = new ProductService(requestSpecification);
-        cartService = new CartService(requestSpecification);
+        ApiClient client = new ApiClient(requestSpecification);
+        productService = new ProductService(client);
+        cartService = new CartService(client);
     }
 
     @ParameterizedTest

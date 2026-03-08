@@ -7,26 +7,24 @@ import io.restassured.http.Method;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
-import static com.fs.test.ApiClient.executeCall;
-import static io.restassured.RestAssured.requestSpecification;
 
 
 public class CartService {
-    private final RequestSpecification requestSpec;
+    ApiClient client;
 
-    public CartService(RequestSpecification requestSpec) {
-        this.requestSpec = requestSpec;
+    public CartService(ApiClient client) {
+        this.client = client;
     }
 
     public Response getAllCarts() {
-        return ApiClient.executeCall(requestSpec, Endpoints.CART);
+        return client.get(Endpoints.CART);
     }
 
     public Response addItemToCart(Cart product) {
-        return ApiClient.executeCall(requestSpec, Method.POST, Endpoints.CART,null, product);
+        return client.post(Endpoints.CART, product);
     }
 
     public Response getParticularItemFromCart(int id) {
-        return ApiClient.executeCall(requestSpec, Endpoints.PRODUCTS + id);
+        return client.get(Endpoints.PRODUCTS + id);
     }
 }

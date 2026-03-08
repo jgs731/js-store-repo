@@ -17,8 +17,9 @@ public class StoreAdminTest extends BaseTest {
 
     @BeforeEach
     void init() {
-        productService = new ProductService(requestSpecification);
-        cartService = new CartService(requestSpecification);
+        ApiClient client = new ApiClient(requestSpecification);
+        productService = new ProductService(client);
+        cartService = new CartService(client);
 }
     @Test
     @DisplayName("The lowest rated product can be deleted from the product list")

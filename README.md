@@ -7,5 +7,5 @@ Assumptions
 Future Improvements
 
 Quick start
-- Run the command below in the terminal:
+- Run this command in the terminal:
 `./gradlew test`

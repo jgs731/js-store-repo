@@ -10,19 +10,41 @@ import java.util.Map;
 import static io.restassured.RestAssured.*;
 
 public class ApiClient {
+    private final RequestSpecification spec;
 
-    public static Response executeCall(RequestSpecification requestSpecification, Method method,
-                                String endpoint, Map<String, ?> extraParams,
-                                Object bodyContent) {
-        return given()
-                        .spec(requestSpecification)
-                        .queryParams(extraParams == null ? Map.of() : extraParams)
-                        .body(bodyContent == null ? "" : bodyContent)
-                        .request(method,endpoint);
+    public ApiClient(RequestSpecification spec) {
+        this.spec = spec;
     }
 
-    public static Response executeCall(RequestSpecification requestSpecification, String endpoint) {
-        return executeCall(requestSpecification, Method.GET, endpoint, null, null);
+    public Response get(String endpoint) {
+        return given()
+                .spec(spec)
+                .when()
+                .get(endpoint);
+    }
+
+    public Response post(String endpoint, Object body) {
+        return given()
+                .spec(spec)
+                .body(body)
+                .when()
+                .post(endpoint);
+    }
+
+    public Response patch(String endpoint, Object body) {
+        return given()
+                .spec(spec)
+                .body(body)
+                .when()
+                .patch(endpoint);
+    }
+
+    public Response delete(String endpoint, Object body) {
+        return given()
+                .spec(spec)
+                .body(body)
+                .when()
+                .delete(endpoint);
     }
 
 }
