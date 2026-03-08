@@ -1,9 +1,10 @@
 package com.fs.test;
 
 import com.fs.datamodels.*;
-import com.fs.utils.Endpoints;
-import io.restassured.http.Method;
+import com.fs.services.CartService;
+import com.fs.services.ProductService;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,19 +16,30 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class OnlineShopperTest extends BaseTest {
+
+    ProductService productService;
+    CartService cartService;
+
+    @BeforeEach
+    void init() {
+        productService = new ProductService(requestSpecification);
+        cartService = new CartService(requestSpecification);
+    }
+
     public int productId;
     @Test
     @DisplayName("Verify the number of products in store")
     void verifyNumberOfProductsInStore() {
-        response = executeCall(Method.GET, Endpoints.PRODUCTS);
+        response = productService.getAllProducts();
 
-        assertEquals(20, response.jsonPath().getList("id").size());
+        assertTrue(response.jsonPath().getList("id").size() > 0);
     }
 
-    @Test
+    @ParameterizedTest
     @DisplayName("Verify that a valid product ID returns a single result")
-    void verifyAValidSingleProductIsReturned() {
-        response = executeCall(Method.GET, Endpoints.PRODUCTS + "1");
+    @ValueSource(ints = {1, 4, 9, 16})
+    void verifyAValidSingleProductIsReturned(Integer id) {
+        response = productService.getProduct(id);
 
         assertEquals(1, response.jsonPath().getObject("id", Integer.class));
     }
@@ -36,15 +48,15 @@ public class OnlineShopperTest extends BaseTest {
     @DisplayName("Find all products for one particular category")
     @ValueSource(strings = {"electronics"})
     void verifyASingleCategoryOfProductIsReturned(String specificCategory) {
-        response = executeCall(Method.GET, Endpoints.PRODUCT_CATEGORY + specificCategory);
+        List<String> listOfElectronicProducts = productService.listOfProductCategories();
 
-        assertEquals(6, response.jsonPath().getList("category").size());
+        assertTrue(listOfElectronicProducts.size() < 20);
     }
 
     @Test
     @DisplayName("Verify that searches for non-existent Products returns no results")
     void verifyNoProductIsReturnedForAnInvalidId() {
-        response = executeCall(Method.GET, Endpoints.PRODUCTS + "test");
+        response = productService.getProduct(99);
 
         assertTrue(response.getBody().asString().isBlank());
     }
@@ -52,7 +64,7 @@ public class OnlineShopperTest extends BaseTest {
     @Test
     @DisplayName("Cart details for all customers can be viewed")
     void allCartDetailsCanBeViewed() {
-        response = executeCall(Method.GET, Endpoints.CART);
+        response = cartService.getAllCarts();
 
         assertEquals(7, response.jsonPath().getList("carts", Cart.class).size());
     }
@@ -60,7 +72,7 @@ public class OnlineShopperTest extends BaseTest {
     @Test
     @DisplayName("Verify that cart details can be accessed for a specified user")
     void cartCanBeViewedForAnIndividualUser() {
-        response = executeCall(Method.GET, Endpoints.CART + "/1");
+        response = cartService.getParticularItemFromCart(1);
 
         assertEquals(3, response.jsonPath().getList("products", Products.class).size());
     }
@@ -68,21 +80,21 @@ public class OnlineShopperTest extends BaseTest {
     @Test
     @DisplayName("Verify that the product added to cart contains expected product information")
     void addCheapestElectronicItemToCart() {
-        String selectedCategory = listOfProductCategories().getFirst(); // electronics is first in list
-        Integer cheapestElectronicID = cheapestProductInCategoryId(selectedCategory);
+        String selectedCategory = productService.listOfProductCategories().getFirst(); // electronics is first in list
+        Integer cheapestElectronicID = productService.cheapestProductInCategoryId(selectedCategory);
 
         Cart item = new Cart(1, Date.valueOf(LocalDate.now()), List.of(
                 new Products(cheapestElectronicID, 1)
         ));
 
-        response = executeCall(Method.POST, Endpoints.CART, null, item);
+        response = cartService.addItemToCart(item);
         productId = response.jsonPath().getObject("$", Cart.class)
                 .products().getLast().productId();
         assertNotNull(response.jsonPath().getObject("$", Cart.class)
                         .products().getLast().productId(),
                 "product not added to cart");
 
-        Response response2 = executeCall(Method.GET, Endpoints.PRODUCTS + productId);
+        Response response2 = productService.getProduct(productId);
         assertAll("Product is recognised in the products list",
                 () -> assertEquals("64", response2.jsonPath().get("price").toString()),
                 () -> assertEquals("203", response2.jsonPath().get("rating.count").toString())

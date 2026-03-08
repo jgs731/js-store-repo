@@ -1,10 +1,14 @@
 package com.fs.test;
 
 import com.fs.datamodels.*;
+import com.fs.services.CartService;
+import com.fs.services.ProductService;
+import com.fs.services.UserService;
 import com.fs.utils.Endpoints;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,18 +17,23 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserLoginAndRegistration extends BaseTest {
-    static Users users;
+    UserService userService;
+
+    @BeforeEach
+    void init() {
+        userService = new UserService(requestSpecification);
+    }
+
 
     @Test
     @DisplayName("Users are able to log into the store successfully")
     void validUsersCanLogIn(){
-        response = executeCall(Method.GET, Endpoints.USERS);
-        users = response.jsonPath().getObject("[0]", Users.class);
+        response = userService.getAllUsers();
+        Users firstUser = response.jsonPath().getObject("[0]", Users.class);
 
-        Auth userLogin = new Auth(users.username(), users.password());
-        response = executeCall(Method.POST, Endpoints.AUTH, null, userLogin);
-        String storedToken = response.jsonPath().getString("token");
-        System.setProperty("token", storedToken);
+        Auth userLogin = new Auth(firstUser.username(), firstUser.password());
+        Response response2 = userService.authenticateUser(userLogin);
+        String storedToken = response2.jsonPath().getString("token");
         assertFalse(storedToken.isEmpty());
     }
 
@@ -36,7 +45,7 @@ public class UserLoginAndRegistration extends BaseTest {
           "username", "fakeun",
           "password", "fakepw"
         );
-        response = executeCall(Method.POST, Endpoints.AUTH, null, invalidUserCreds);
+        response = userService.authenticateUser(invalidUserCreds);
 
         assertTrue(response.body().asString().contains("username or password is incorrect"));
     }
@@ -51,7 +60,7 @@ public class UserLoginAndRegistration extends BaseTest {
                         new Geolocation("53.470811512522246", "-2.2417950582410384"),
                         "0123465798"
                 ));
-        response = executeCall(Method.POST, Endpoints.USERS, null, userDetails);
+        response = userService.authenticateUser(userDetails);
 
         assertNotEquals("", response.jsonPath().getObject("id", Integer.class));
     }
