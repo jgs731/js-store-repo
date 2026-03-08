@@ -19,7 +19,7 @@ public class UserService {
     }
 
     public Response authenticateUser(Object userCredentials) {
-        return ApiClient.executeCall(requestSpec, Method.POST, Endpoints.USERS, null, userCredentials);
+        return ApiClient.executeCall(requestSpec, Method.POST, Endpoints.AUTH, null, userCredentials);
     }
 
 }

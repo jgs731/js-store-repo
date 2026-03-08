@@ -29,7 +29,7 @@ public class UserLoginAndRegistration extends BaseTest {
     @DisplayName("Users are able to log into the store successfully")
     void validUsersCanLogIn(){
         response = userService.getAllUsers();
-        Users firstUser = response.jsonPath().getObject("[0]", Users.class);
+        Users firstUser = response.body().jsonPath().getObject("[0]", Users.class);
 
         Auth userLogin = new Auth(firstUser.username(), firstUser.password());
         Response response2 = userService.authenticateUser(userLogin);
