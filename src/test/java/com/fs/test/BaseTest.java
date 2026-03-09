@@ -14,6 +14,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.util.List;
 import java.util.Map;
@@ -22,13 +23,12 @@ import static io.restassured.RestAssured.*;
 
 
 class BaseTest {
-    public static final Dotenv dotEnv = Dotenv.load();
     protected static RequestSpecification requestSpecification;
     protected static ResponseSpecification responseSpecification;
-    static Response response;
+    public Response response;
 
-    @BeforeAll
-    static void setup() {
+    @BeforeEach
+    void setup() {
         requestSpecification = new RequestSpecBuilder()
                 .setBaseUri(ConfigLoader.getBaseUrl())
                 .setContentType(ContentType.JSON)
@@ -38,41 +38,5 @@ class BaseTest {
         responseSpecification = new ResponseSpecBuilder()
                 .log(LogDetail.BODY)
                 .build();
-
-        RestAssured.defaultParser = Parser.JSON;
     }
-
-
-    public static Response executeCall(Method method, String endpoint, Map<String, ?> extraParams, Object bodyContent) {
-        return (Response)
-                given()
-                .spec(requestSpecification)
-                .queryParams(extraParams == null ? Map.of() : extraParams)
-                .body(bodyContent == null ? "" : bodyContent)
-                .request(method,endpoint)
-                .then()
-                .spec(responseSpecification)
-                .extract();
-    }
-
-    public Response executeCall(Method method, String endpoint) {
-        return executeCall(method, endpoint, null, null);
-    }
-
-    public Integer cheapestProductInCategoryId(String category){
-        response = executeCall(Method.GET, Endpoints.PRODUCT_CATEGORY + category);
-        return response.jsonPath().getList("sort {it.price}.id", Integer.class).getFirst();
-    }
-
-    public List<String> listOfProductCategories() {
-        response = executeCall(Method.GET, Endpoints.ALL_CATEGORIES);
-        return response.then().extract().path("$");
-    }
-
-    public Integer listofProductIdsByRating() {
-        response = executeCall(Method.GET, Endpoints.PRODUCTS, null, null);
-        return response.jsonPath().getList("sort {it.rating.rate}.id", Integer.class).getFirst();
-    }
-
-
 }
